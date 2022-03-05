@@ -9,9 +9,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "curl": "^0.1.4",
-    "jsdom": "^13.1.0",
-    "node-pandoc": "^0.3.0",
+    "jsdom": "^19.0.0",
     "readability": "git+https://github.com/mozilla/readability.git"
   }
 }

@@ -1,17 +1,11 @@
 
 const Readability = require('readability'),
-  pandoc = require('node-pandoc'),
-  jsdom = require("jsdom"),
-  { JSDOM } = jsdom,
+  fs = require('fs'),
+  { JSDOM } = require("jsdom"),
   now = new Date(),
-  args = '-f html -t epub -o reading_list_' + now.toDateString().replace(/\s/g, '_') + '.epub',
-  // args = '-f html -t markdown -o reading_list_' + now.toDateString().replace(/\s/g, '_') + '.md',
-  uri_list = [
-    'https://longreads.com/2018/10/02/webzines-90s-online-media',
-    'https://www.theatlantic.com/technology/archive/2018/11/why-ratings-and-feedback-forms-dont-work/575455',
-    'https://www.nytimes.com/2018/12/17/science/donald-knuth-computers-algorithms-programming.html',
-    'https://www.wired.com/story/mirai-botnet-minecraft-scam-brought-down-the-internet',
-    'https://www.theverge.com/2018/4/16/17233946/olpcs-100-laptop-education-where-is-it-now'
+  url_list = [
+    'https://grafik.agency/insight/waveofthefuture',
+    'https://www.vice.com/en/article/xwqjg3/the-complete-untold-history-of-halo-an-oral-history',
   ];
 
 const getText = url => {
@@ -30,13 +24,11 @@ const getText = url => {
 
 let web_content = "<html><head><meta charset='utf-8'><title>Reading list</title></head>";
 (async function(){
-  await Promise.all(uri_list.map(async (uri) => {
-    await getText(uri).then(webText => {
-      let dom = new JSDOM(webText, {features: {
-        FetchExternalResources: false,
-        ProcessExternalResources: false}});
+  await Promise.all(url_list.map(async (url) => {
+    await getText(url).then(webText => {
+      let dom = new JSDOM(webText, {features: {resources: "usable"}});
       let article = new Readability(dom.window.document).parse();
-      web_content += ('<h1>' + article.title + '</h1>' + article.content);
+      web_content += ('<h1>' + article.title + '</h1>' + article.content + '\n');
     }, err => {
       console.log(err);
     });
@@ -46,6 +38,6 @@ let web_content = "<html><head><meta charset='utf-8'><title>Reading list</title>
   callback = function (err, _) {
     if (err) console.error(err)};
     // return console.log(result), result};
-  pandoc(web_content, args, callback);
+  fs.writeFile(now.toDateString().replace(/\s/g, '_') + '.html', web_content, callback)
 })();
 

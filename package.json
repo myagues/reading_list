@@ -10,6 +10,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "jsdom": "^19.0.0",
-    "readability": "git+https://github.com/mozilla/readability.git"
+    "@mozilla/readability": "git+ssh://git@github.com:mozilla/readability.git#semver:0.4.1"
   }
 }
